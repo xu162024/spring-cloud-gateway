@@ -1,0 +1,71 @@
+#端口
+server:
+  port: 10000
+
+
+#服务名
+spring:
+  application:
+    name: APIGateWay-service
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  redis:
+    host: 52.82.107.161
+    port: 6379
+    password: Taione999
+    database: 0
+    timeout: 300
+    maxActive: 300
+    maxIdle: 300
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      routes:
+        - id:  exchange-contract-router
+          # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
+          # lb://user-service 路由到服务名
+          uri: http://localhost:8080
+          predicates:
+          # 重点！转发该路径！,/test,
+          - Path= /test/**
+          filters:
+#          - StripPrefix=1
+          - name: Retry  #重试机制
+            args:
+              retries: 3
+              methods:
+                - GET
+                - POST
+              statuses: BAD_GATEWAY
+          - name: Hystrix
+            args:
+              name: fallbackcmd
+              fallbackUri: forward:/fallback
+          - name: RequestRateLimiter  #固定值，作用于限流
+            args:
+              redis-rate-limiter.replenishRate: 10
+              redis-rate-limiter.burstCapacity: 20
+              key-resolver: "#{@uriKeyResolver}"
+
+
+#配置Hystrix超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+
+ribbon:
+  ReadTimeout: 20000  #ribbon读取超时时间，接口处理时间，不包括建立连接时间
+  ConnectTimeout: 3000 #ribbon请求连接时间
+

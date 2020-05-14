@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="exchange-trading-api:war">
+    <output-path>$PROJECT_DIR$/../exchange-trading-api/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>exchange-trading-api</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="exchange-trading-api.war">
+      <element id="artifact" artifact-name="exchange-trading-api:war exploded" />
+    </root>
+  </artifact>
+</component>
