@@ -1,5 +1,6 @@
 # spring-cloud-gateway
 此gateway可用。
+坑比较多，版本需要配置正确
 版本配置
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -10,3 +11,4 @@
     
     <java.version>1.8</java.version>
     <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+
